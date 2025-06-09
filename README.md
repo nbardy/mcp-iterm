@@ -3,13 +3,23 @@
 A Model Context Protocol (MCP) server for interacting with iTerm2 on macOS.
 
 ```
-  _____         _____                    __  __  _____ _____  
- |_   _|       |_   _|                  |  \/  |/ ____|  __ \ 
-   | |  ___ _ __ | |    ___  _ __ ___   | \  / | |    | |__) |
-   | | / _ \ '__|| |   / _ \| '_ ` _ \  | |\/| | |    |  ___/ 
-  _| ||  __/ |  _| |__| (_) | | | | | | | |  | | |____| |     
- |_____\___|_| |______\___/|_| |_| |_| |_|  |_|\_____|_|     
+    ╔╦╗╔═╗╔═╗      ╦╔╦╗╔═╗╦═╗╔╦╗
+    ║║║║  ╠═╝      ║ ║ ║╣ ╠╦╝║║║
+    ╩ ╩╚═╝╩  ═══   ╩ ╩ ╚═╝╩╚═╩ ╩
+    
+    ┌─┐┌─┐┌┬┐┌┬┐┌─┐┌┐┌┌┬┐  ┌─┐┬─┐┌─┐┌┬┐┌─┐┌─┐┌─┐┬  
+    │  │ │││││││├─┤│││ ││  ├─┘├┬┘│ │ │ │ ││  │ ││  
+    └─┘└─┘┴ ┴┴ ┴┴ ┴┘└┘─┴┘  ┴  ┴└─└─┘ ┴ └─┘└─┘└─┘┴─┘
 ```
+
+## Purpose
+
+Sometimes you don't just want the CLI tool to run once and return. Sometimes you want
+your AI to manage multiple long running process(e.g. "Launch a Web server for the backend" and "a typescript build server for the frontend".)
+
+Instead of sending one off commands, ItermMCP let's manage a long running iterm process
+and you allows your AI to monitor running jobs.
+
 
 ## Features
 

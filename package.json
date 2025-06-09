@@ -1,29 +1,52 @@
 {
   "name": "mcp-iterm",
   "version": "1.0.0",
-  "description": "MCP server for controlling iTerm2",
+  "description": "MCP server for controlling iTerm2 on macOS",
   "main": "dist/index.js",
   "type": "module",
   "bin": {
-    "mcp-iterm": "./dist/index.js"
+    "mcp-iterm": "dist/index.js"
   },
   "scripts": {
     "start": "node dist/index.js",
     "debug": "node --inspect dist/index.js",
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "serve": "node dist/index.js",
-    "postinstall": "npm run build"
+    "serve": "node dist/index.js"
   },
   "engines": {
     "node": ">=18.0.0"
   },
+  "os": [
+    "darwin"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "iterm",
+    "iterm2",
+    "terminal",
+    "macos",
+    "applescript",
+    "automation"
+  ],
+  "author": "Nicholas Bardy",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nbardy/mcp-iterm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nbardy/mcp-iterm/issues"
+  },
+  "homepage": "https://github.com/nbardy/mcp-iterm#readme",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "package.json"
+  ],
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.7.0",
-    "lodash": "^4.17.21",
-    "run-applescript": "^7.0.0",
-    "winston": "^3.17.0",
-    "zod": "^3.24.2"
+    "@modelcontextprotocol/sdk": "^1.7.0"
   },
   "devDependencies": {
     "@types/node": "^18.0.0",

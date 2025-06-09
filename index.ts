@@ -135,7 +135,9 @@ async function runAppleScript(script: string, timeoutMs = 10000, retries = 2): P
       }, timeoutMs);
       
       try {
-        const { stdout } = await execPromise(`osascript -e '${script.replace(/'/g, "'\\''")}'`);
+        // Fix: Properly escape single quotes for shell execution
+        const escapedScript = script.replace(/'/g, "'\"'\"'");
+        const { stdout } = await execPromise(`osascript -e '${escapedScript}'`);
         clearTimeout(timeoutId);
         resolve(stdout.trim());
       } catch (error: any) {
@@ -166,15 +168,15 @@ function escapeForAppleScript(str: any): string {
   if (typeof str !== 'string') {
     return JSON.stringify(str);
   }
-  // Escape backslashes, quotes, newlines, etc.
+  // Escape for AppleScript string literals
+  // In AppleScript, single quotes are escaped by doubling them
   return str
     .replace(/\\/g, '\\\\')
     .replace(/"/g, '\\"')
-    .replace(/'/g, "'\\''")
+    .replace(/'/g, "''")  // Fix: Double single quotes for AppleScript
     .replace(/\n/g, '\\n')
     .replace(/\r/g, '\\r')
-    .replace(/\t/g, '\\t')
-    .replace(/[^\x00-\x7F]/g, char => '\\u' + char.charCodeAt(0).toString(16).padStart(4, '0'));
+    .replace(/\t/g, '\\t');
 }
 
 function trimOutput(content: string, maxSize = 5000): string {
@@ -312,7 +314,7 @@ end tell
 `;
 
 // Sends a control character - FIXED VERSION
-AS_HELPERS.sendControlChar = (tabIndex: number, controlCode: number) => AS_HELPERS.sessionTemplate(tabIndex, `write hex ${controlCode.toString(16)}`);
+AS_HELPERS.sendControlChar = (tabIndex: number, controlCode: number) => AS_HELPERS.sessionTemplate(tabIndex, `write text (character id ${controlCode})`);
 
 // ==================================================
 // Content Extraction Utilities
