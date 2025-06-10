@@ -401,30 +401,7 @@ const commands = {
     }
   },
   
-    // Lists all tabs with tail of their output
-    async TailTabAll(args: any) {
-        const lines = args?.lines || 20;
-        const validation = validate.lines(lines);
-        if (!validation.valid) {
-            return createResponse.error(validation.error);
-        }
 
-        try {
-            const tabs = await getAllTabInfo(); // Use the new function
-
-            const formattedOutput = tabs.map(tab => {
-                // Get the last N lines
-                const contentLines = tab.content.split("\n");
-                const lastLines = contentLines.slice(-lines).join("\n");
-
-                return `========== TAB ${tab.index}: ${tab.name} ==========\n\n${trimOutput(lastLines)}`;
-            }).join("\n\n" + "-".repeat(50) + "\n\n");
-
-            return createResponse.success(trimOutput(formattedOutput, 10000));
-        } catch (error: any) {
-            return createResponse.error(`Error listing tabs: ${error.message}`);
-        }
-    },
 
     // Shows tail of specific tab
     async TailTabSingle(args: any) {
@@ -594,19 +571,30 @@ const commands = {
     }
   },
   
-    // Gets detailed information about all tabs
-    async GetAllTabInfo() {
+    // Gets detailed information about all tabs including tail content
+    async GetAllTabInfo(args: any) {
+        const lines = args?.lines || 20;
+        const validation = validate.lines(lines);
+        if (!validation.valid) {
+            return createResponse.error(validation.error);
+        }
+
         try {
             const tabs = await getAllTabInfo(); // Use new function
 
-            const tabsInfo = tabs.map(tab => ({
-                index: tab.index,
-                name: tab.name,
-                isRunning: tab.isRunning,
-                commandRunning: tab.isRunning ? "unknown (detected via content)" : "none"
-            }));
+            const formattedOutput = tabs.map(tab => {
+                // Get the last N lines
+                const contentLines = tab.content.split("\n");
+                const lastLines = contentLines.slice(-lines).join("\n");
 
-            return createResponse.success(`Tab Information:\n\n${JSON.stringify(tabsInfo, null, 2)}`);
+                const statusInfo = `Tab ${tab.index}: ${tab.name}
+Running: ${tab.isRunning}
+Command Running: ${tab.isRunning ? "unknown (detected via content)" : "none"}`;
+
+                return `========== ${statusInfo} ==========\n\n${trimOutput(lastLines)}`;
+            }).join("\n\n" + "-".repeat(70) + "\n\n");
+
+            return createResponse.success(trimOutput(formattedOutput, 15000));
         } catch (error: any) {
             return createResponse.error(`Error getting tabs info: ${error.message}`);
         }
@@ -623,18 +611,7 @@ const tools = [
     inputSchema: { type: "object", properties: {}, required: [] },
     handler: commands.createNewTab
   },
-    {
-        name: "iterm_tail_tab_all",
-        description: "Lists all tabs with their output tails",
-        inputSchema: {
-            type: "object",
-            properties: {
-                lines: { type: "number", description: "Number of lines to show for each tab (default: 20)" }
-            },
-            required: []
-        },
-        handler: commands.TailTabAll
-    },
+
     {
         name: "iterm_tail_tab_single",
         description: "Shows the last N lines from a specific tab",
@@ -692,8 +669,14 @@ const tools = [
   },
     {
         name: "iterm_get_all_tabs_info",
-        description: "Gets detailed information about all tabs including running state",
-        inputSchema: { type: "object", properties: {}, required: [] },
+        description: "Gets detailed information about all tabs including running state and tail content",
+        inputSchema: { 
+            type: "object", 
+            properties: {
+                lines: { type: "number", description: "Number of lines to show for each tab (default: 20)" }
+            }, 
+            required: [] 
+        },
         handler: commands.GetAllTabInfo
     }
 ];

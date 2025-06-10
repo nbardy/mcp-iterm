@@ -37,22 +37,51 @@ and you allows your AI to monitor running jobs.
 
 ## Installation
 
+### Via npm (Recommended)
+
+```bash
+# Install globally from npm
+npm install -g mcp-iterm
+```
+
+### MCP Configuration
+
+After installing via npm, add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "mcp-iterm": {
+      "command": "mcp-iterm"
+    }
+  }
+}
+```
+
+### From Source
+
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/mcp-iterm.git
+git clone https://github.com/nbardy/mcp-iterm.git
 cd mcp-iterm
 
 # Install dependencies
 npm install
 
-# Make the script executable
-chmod +x index.js
+# Build the project
+npm run build
 ```
 
 ## Usage
 
 ### Running the Server
 
+If installed via npm:
+```bash
+# Start the server
+mcp-iterm
+```
+
+If running from source:
 ```bash
 # Start the server
 npm start
